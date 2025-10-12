@@ -134,7 +134,7 @@ export default function MapComponent({ listings, selected }: { listings: Listing
                 (<></>)}
                 </div>
                 <div className="mb-4" />
-                <Link href={`/edit?id=${house._id}`} className="text-blue-500 underline text-xs">
+                <Link href={`/edit/${house._id}`} className="text-blue-500 underline text-xs">
                   Edit House
                 </Link>
 

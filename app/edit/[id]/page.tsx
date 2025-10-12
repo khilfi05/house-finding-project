@@ -5,10 +5,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import Link from "next/link";
 
-export default function EditListingPage() {
+export default function EditListingPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const listingId = searchParams.get("id");
+  const listingId = params.id
 
   const [form, setForm] = useState({
     title: "",
@@ -323,7 +323,11 @@ export default function EditListingPage() {
               onChange={handleChange}
               className="w-full p-2 border rounded-lg"
               rows={4}
-              placeholder="Eg: Bedroom: 3, Shower: 2, Parking: Available"
+              placeholder={
+`Eg:
+Bedroom: 3
+Shower: 2`
+              }
             />
           </div>
 
