@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Listing from "../models/Listing";
 
-export default function Sidebar({ listings, onSelect }) {
+export default function Sidebar({ listings, onSelect }: { listings: Listing[], onSelect: any }) {
   const [open, setOpen] = useState(true);
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("");
@@ -48,7 +49,7 @@ export default function Sidebar({ listings, onSelect }) {
     >
       {/* Toggle Button */}
       <button
-        className="p-2 text-sm bg-gray-100 hover:bg-gray-200"
+        className="p-2 text-sm bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 transition"
         onClick={() => setOpen(!open)}
       >
         {open ? "←" : "→"}
@@ -59,14 +60,14 @@ export default function Sidebar({ listings, onSelect }) {
           <input
             type="text"
             placeholder="Search house name..."
-            className="w-full border px-2 py-1 mb-2 text-sm"
+            className="border placeholder-gray-300 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 p-2 mb-2 w-full text-blue-400"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
 
           <div className="flex gap-2 mb-2">
             <select
-              className="border text-sm p-1"
+              className="border text-sm placeholder-gray-300 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 p-2 mb-2 w-full text-blue-400"
               value={sort}
               onChange={(e) => setSort(e.target.value)}
             >
@@ -76,7 +77,7 @@ export default function Sidebar({ listings, onSelect }) {
             </select>
 
             <select
-              className="border text-sm p-1"
+              className="border text-sm placeholder-gray-300 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 p-2 mb-2 w-full text-blue-400"
               value={furnishedFilter}
               onChange={(e) => setFurnishedFilter(e.target.value)}
             >
@@ -92,13 +93,13 @@ export default function Sidebar({ listings, onSelect }) {
               <li
                 key={i}
                 onClick={() => onSelect(house)}
-                className="p-2 border-b hover:bg-gray-100 cursor-pointer text-sm"
+                className="p-2 border-b hover:bg-gray-200 cursor-pointer text-sm bg-white text-gray-800 px-4 py-2"
               >
                 <div className="font-semibold">{house.title}</div>
-                <div className="text-gray-600">{house.price}</div>
+                <div className="text-green-700">{`$ ${house.price} / week`}</div>
                 <div className="text-xs text-gray-500">
-                  🏫 {house.walkToMonash ?? "?"} mins • 🚌{" "}
-                  {house.walkToBusStop ?? "?"} mins
+                  🏫 {house.walkingToMonash ?? "?"} mins • 🚌{" "}
+                  {house.walkingToBusStop ?? "?"} mins
                 </div>
               </li>
             ))}

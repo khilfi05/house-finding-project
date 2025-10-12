@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
-import { Double } from "mongodb";
+import Link from "next/link";
 
 export default function AddListingPage() {
   const router = useRouter();
@@ -20,6 +20,7 @@ export default function AddListingPage() {
     latitude: "",
     longitude: "",
   });
+  const [submitButton, setSubmitButton] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -27,23 +28,41 @@ export default function AddListingPage() {
 
   const extractLatLon = (link: string) => {
     try {
-      const match = link.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
-      if (match) {
-        return { lat: match[1], lon: match[2] };
+      // Match formats:
+      // 1️⃣ @-37.9110995,145.1366624
+      // 2️⃣ center=-37.93252182,145.1267395
+      // 3️⃣ query=lat,lon (some shared links use this)
+      const regexes = [
+        /@(-?\d+\.\d+),(-?\d+\.\d+)/,              // @lat,lon
+        /center=(-?\d+\.\d+),(-?\d+\.\d+)/,        // center=lat,lon
+        /query=(-?\d+\.\d+),(-?\d+\.\d+)/          // query=lat,lon
+      ];
+
+      for (const regex of regexes) {
+        const match = link.match(regex);
+        if (match) {
+          return { lat: match[1], lon: match[2] };
+        }
       }
+
+      console.warn("No coordinates found in link:", link);
     } catch (err) {
-      console.error("Invalid link");
+      console.error("Invalid link:", err);
     }
+
     return null;
   };
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitButton(true);
 
     // Extract lat/lon
     const coords = extractLatLon(form.mapLink);
     if (!coords) {
       toast.error("Invalid Google Maps link. Please check the URL format.");
+      setSubmitButton(false)
       return;
     }
 
@@ -62,6 +81,7 @@ export default function AddListingPage() {
     for (const field of requiredFields) {
       if (!form[field as keyof typeof form]) {
         toast.error(`Please fill in ${field}`);
+        setSubmitButton(false)
         return;
       }
     }
@@ -91,46 +111,50 @@ export default function AddListingPage() {
         setTimeout(() => router.push("/"), 1500);
       } else {
         toast.error("Failed to add listing.");
+        setSubmitButton(false)
       }
     } catch (err) {
       toast.error("Something went wrong!");
+      setSubmitButton(false)
     }
+    
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-6 text-gray-600">
       <Toaster />
       <div className="max-w-xl mx-auto bg-white rounded-2xl shadow-md p-6">
-        <h1 className="text-2xl font-semibold mb-4 text-center">Add New Listing</h1>
+        <h1 className="text-2xl font-semibold mb-4 text-center text-blue-600">Add New Listing</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Title */}
           <div>
-            <label className="block font-medium">House Title *</label>
+            <label className="block font-medium">House Title <label className="text-red-600">*</label></label>
             <input
               name="title"
               value={form.title}
               onChange={handleChange}
               className="w-full p-2 border rounded-lg"
+              placeholder="Eg: 6 McMillan Street, Clayton South"
               required
             />
           </div>
 
           {/* Map Link */}
           <div>
-            <label className="block font-medium">Google Maps Link *</label>
+            <label className="block font-medium">Google Maps Link <label className="text-red-600">*</label></label>
             <input
               name="mapLink"
               value={form.mapLink}
               onChange={handleChange}
               className="w-full p-2 border rounded-lg"
               required
-              placeholder="Paste a Google Maps link here"
+              placeholder="Eg: https://www.google.com/maps/search/?api=1&query=..."
             />
           </div>
 
           {/* Price */}
           <div>
-            <label className="block font-medium">House Price (RM) *</label>
+            <label className="block font-medium">Weekly Price ($)<label className="text-red-600">*</label></label>
             <input
               type="number"
               name="price"
@@ -138,32 +162,34 @@ export default function AddListingPage() {
               onChange={handleChange}
               className="w-full p-2 border rounded-lg"
               min="0"
+              placeholder="Eg: 630"
               required
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="block font-medium">Short Description *</label>
+            <label className="block font-medium">Short Description <label className="text-red-600">*</label></label>
             <textarea
               name="description"
               value={form.description}
               onChange={handleChange}
               className="w-full p-2 border rounded-lg"
               rows={3}
+              placeholder="Eg: Affordable apartment close to public transport."
               required
             />
           </div>
 
           {/* Furnished */}
           <div>
-            <label className="block font-medium">Furnished *</label>
+            <label className="block font-medium">Furnished <label className="text-red-600">*</label></label>
             <div className="flex gap-4 mt-1">
               <button
                 type="button"
                 onClick={() => setForm({ ...form, furnished: "yes" })}
-                className={`px-4 py-2 rounded-lg border ${
-                  form.furnished === "yes" ? "bg-green-500 text-white" : ""
+                className={`px-4 py-2 rounded-lg border hover:bg-gray-200 ${
+                  form.furnished === "yes" ? "bg-green-500 text-white hover:bg-green-600" : ""
                 }`}
               >
                 Yes
@@ -171,8 +197,8 @@ export default function AddListingPage() {
               <button
                 type="button"
                 onClick={() => setForm({ ...form, furnished: "no" })}
-                className={`px-4 py-2 rounded-lg border ${
-                  form.furnished === "no" ? "bg-red-500 text-white" : ""
+                className={`px-4 py-2 rounded-lg border hover:bg-gray-200 ${
+                  form.furnished === "no" ? "bg-red-500 text-white hover:bg-red-600" : ""
                 }`}
               >
                 No
@@ -182,48 +208,52 @@ export default function AddListingPage() {
 
           {/* Distances */}
           <div>
-            <label className="block font-medium">Walking distance to Monash *</label>
+            <label className="block font-medium">Walking to Monash (minute)<label className="text-red-600">*</label></label>
             <input
               name="walkingToMonash"
               value={form.walkingToMonash}
               onChange={handleChange}
               className="w-full p-2 border rounded-lg"
+              placeholder="Eg: 6"
               required
             />
           </div>
 
           <div>
-            <label className="block font-medium">Walking distance to Bus Stop *</label>
+            <label className="block font-medium">Walking to Bus Stop (minute)<label className="text-red-600">*</label></label>
             <input
               name="walkingToBusStop"
               value={form.walkingToBusStop}
               onChange={handleChange}
               className="w-full p-2 border rounded-lg"
+              placeholder="Eg: 7"
               required
             />
           </div>
 
           {/* URLs */}
           <div>
-            <label className="block font-medium">House Source (URL) *</label>
+            <label className="block font-medium">House Source (URL) <label className="text-red-600">*</label></label>
             <input
               type="url"
               name="sourceURL"
               value={form.sourceURL}
               onChange={handleChange}
               className="w-full p-2 border rounded-lg"
+              placeholder="Eg: https://www.tenantapp.com.au/Rentals/ViewListing/3338295"
               required
             />
           </div>
 
           <div>
-            <label className="block font-medium">House Image (URL) *</label>
+            <label className="block font-medium">House Image (URL) <label className="text-red-600">*</label></label>
             <input
               type="url"
               name="imageURL"
               value={form.imageURL}
               onChange={handleChange}
               className="w-full p-2 border rounded-lg"
+              placeholder="Eg: https://inspectre.blob.core.windows.net/images/normal/..."
               required
             />
           </div>
@@ -231,10 +261,20 @@ export default function AddListingPage() {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white p-3 rounded-lg font-medium hover:bg-blue-700 transition"
+            className={submitButton? "w-full bg-gray-300 text-gray-600 p-3 rounded-lg font-medium transition" : "w-full bg-blue-600 text-white p-3 rounded-lg font-medium hover:bg-blue-700 transition"}
+            disabled={submitButton}
           >
             Add Listing
           </button>
+
+          <Link href="/">
+            <button
+              type="button"
+              className="w-full p-3 rounded-lg font-medium hover:text-gray-950 border-1 border-gray-600 hover:bg-gray-100 transition"
+            >
+              Back to Map
+            </button>
+          </Link>
         </form>
       </div>
     </div>

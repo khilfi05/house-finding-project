@@ -4,9 +4,11 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import Listing from "../models/Listing";
 
 import iconUrl from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
+import Link from "next/link";
 
 const DefaultIcon = L.icon({
   iconUrl,
@@ -16,7 +18,7 @@ const DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-function FlyToMarker({ selected }) {
+function FlyToMarker({ selected }: { selected: Listing }) {
   const map = useMap();
 
   useEffect(() => {
@@ -28,7 +30,7 @@ function FlyToMarker({ selected }) {
   return null;
 }
 
-export default function MapComponent({ listings, selected }) {
+export default function MapComponent({ listings, selected }: { listings: Listing[], selected: Listing }) {
   const markerRefs = useRef({});
 
   // Whenever selected changes, open its popup if available
@@ -41,7 +43,7 @@ export default function MapComponent({ listings, selected }) {
 
   return (
     <MapContainer
-      center={[3.139, 101.6869]}
+      center={[-37.91087518572503, 145.13660875582238]}
       zoom={12}
       style={{ height: "100%", width: "100%" }}
     >
@@ -61,12 +63,14 @@ export default function MapComponent({ listings, selected }) {
             <Popup>
             <div className="popup-content">
                 {/* Image (only render if exists) */}
-                {house?.image ? (
-                <img
-                    src={house.image}
-                    alt={house.title || "Listing image"}
-                    className="w-full h-32 object-cover rounded-md mb-2"
-                />
+                {house?.imageURL ? (
+                <Link href={house.sourceURL} target="_">
+                    <img
+                        src={house.imageURL}
+                        alt={house.title || "Listing image"}
+                        className="w-full h-32 object-cover rounded-md mb-2"
+                    />
+                </Link>
                 ) : (
                 <div className="w-full h-32 bg-gray-200 flex items-center justify-center rounded-md mb-2 text-gray-500 text-xs">
                     No image
@@ -75,7 +79,11 @@ export default function MapComponent({ listings, selected }) {
 
                 {/* Title & Price */}
                 <div className="popup-title font-semibold text-base mb-1">
-                {house?.title || "Untitled Listing"}
+                  {house?.title? (
+                    <Link href={house.sourceURL || ""} target="_">
+                      {house.title}
+                    </Link>
+                  ) : "Untitled Listing"}
                 </div>
                 <div className="popup-price text-sm text-gray-600 mb-2">
                 {house?.price? `$ ${house.price} / week`: "Price not available"}
@@ -96,11 +104,11 @@ export default function MapComponent({ listings, selected }) {
                 </div>
                 <div>
                     <strong>To Monash:</strong>{" "}
-                    {house?.walkToMonash != null ? `${house.walkToMonash} mins` : "N/A"}
+                    {house?.walkingToMonash != null ? `${house.walkingToMonash} mins` : "N/A"}
                 </div>
                 <div>
                     <strong>To Bus Stop:</strong>{" "}
-                    {house?.walkToBusStop != null ? `${house.walkToBusStop} mins` : "N/A"}
+                    {house?.walkingToBusStop != null ? `${house.walkingToBusStop} mins` : "N/A"}
                 </div>
                 </div>
 

@@ -41,7 +41,7 @@ export default function HomePage() {
         href="/add"
         className="absolute bottom-6 right-6 z-[1000] bg-blue-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-200"
       >
-        ➕ Add Listing
+        + Contribute
       </Link>
     </div>
   );

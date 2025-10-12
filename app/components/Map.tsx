@@ -3,6 +3,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { useEffect, useState } from "react";
 import L from "leaflet";
+import Listing from "../models/Listing";
 
 // Fix missing marker icons
 import iconUrl from "leaflet/dist/images/marker-icon.png";
@@ -36,14 +37,14 @@ export default function MapComponent() {
         attribution='© <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {listings.map((house, i) => (
+      {listings.map((house: Listing, i) => (
         <Marker key={i} position={[house.lat, house.lon]}>
             <Popup>
             <div className="popup-content">
                 {/* Image (only render if exists) */}
-                {house?.image ? (
+                {house?.imageURL ? (
                 <img
-                    src={house.image}
+                    src={house.imageURL}
                     alt={house.title || "Listing image"}
                     className="w-full h-32 object-cover rounded-md mb-2"
                 />
@@ -76,11 +77,11 @@ export default function MapComponent() {
                 </div>
                 <div>
                     <strong>To Monash:</strong>{" "}
-                    {house?.walkToMonash != null ? `${house.walkToMonash} mins` : "N/A"}
+                    {house?.walkingToMonash != null ? `${house.walkingToMonash} mins` : "N/A"}
                 </div>
                 <div>
                     <strong>To Bus Stop:</strong>{" "}
-                    {house?.walkToBusStop != null ? `${house.walkToBusStop} mins` : "N/A"}
+                    {house?.walkingToBusStop != null ? `${house.walkingToBusStop} mins` : "N/A"}
                 </div>
                 </div>
 
