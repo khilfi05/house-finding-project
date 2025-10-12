@@ -1,6 +1,7 @@
 interface Listing {
     _id: string
     title: string
+    mapLink: string
     price: number
     description: string
     furnished: boolean
@@ -10,6 +11,7 @@ interface Listing {
     imageURL: string
     lat: number
     lon: number
+    additionalDetails: string
 };
 
 export default Listing

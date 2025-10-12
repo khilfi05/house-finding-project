@@ -122,8 +122,21 @@ export default function MapComponent({ listings, selected }: { listings: Listing
                     <strong>To Bus Stop:</strong>{" "}
                     {house?.walkingToBusStop != null ? `${house.walkingToBusStop} mins` : "N/A"}
                 </div>
+                { house?.additionalDetails ? house.additionalDetails.split("\n").map((line, i) => {
+                  const [prop, val] = line.split(":")
+                  return (
+                    <div>
+                    <strong>{prop}</strong>{":"}
+                    {val}
+                    </div>
+                  )
+                }):
+                (<></>)}
                 </div>
-
+                <div className="mb-4" />
+                <Link href={`/edit?id=${house._id}`} className="text-blue-500 underline text-xs">
+                  Edit House
+                </Link>
 
             </div>
             </Popup>
