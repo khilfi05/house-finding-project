@@ -11,11 +11,12 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import Link from "next/link";
 
 const DefaultIcon = L.icon({
-  iconUrl,
-  shadowUrl: iconShadow,
+  iconUrl: iconUrl.src,
+  shadowUrl: iconShadow.src,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
 });
+
 L.Marker.prototype.options.icon = DefaultIcon;
 
 function FlyToMarker({ selected }: { selected: Listing | null }) {
