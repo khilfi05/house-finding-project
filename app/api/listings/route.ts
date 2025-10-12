@@ -11,3 +11,4 @@ export async function POST(req: Request) {
   const result = await db.collection("house").insertOne(data);
   return NextResponse.json(result, { status: 201 });
 }
+
