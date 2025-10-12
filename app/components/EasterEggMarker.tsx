@@ -6,11 +6,17 @@ import L from "leaflet";
 import PopupOverlay from "./PopupOverlay";
 import ReactConfetti from "react-confetti";
 
-const EggIcon = L.icon({
+const DoraIcon = L.icon({
   iconUrl: "/leaflet/dora.png", // 🥚
   iconSize: [30, 40],
   iconAnchor: [15, 40],
 });
+
+const MusicBugIcon = L.icon({
+  iconUrl: "/easter-egg/musical-bugs.png", // 🥚
+  iconSize: [30, 40],
+  iconAnchor: [15, 40],
+})
 
 export default function EasterEggMarker() {
   const [phase, setPhase] = useState(0);
@@ -24,20 +30,23 @@ export default function EasterEggMarker() {
   const [done, setDone] = useState(false)
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
-    }
-  }, []);
-
-  useEffect(() => {
     if (done) {
       localStorage.setItem("easter", "y")
     }
-  })
+    setDone(localStorage.getItem("easter") != null)
+    if (typeof window !== "undefined") {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    }
+  }, [done]);
 
   const handleCelebrate = () => {
     setShow(true);
   };
+
+  const playSound = () => {
+      const sound = new Audio('/easter-egg/dora_success_tone.mp3');
+      sound.play();
+    };
 
   const handleClick = (required: number, nextPhase: number) => {
     const now = Date.now();
@@ -71,17 +80,8 @@ export default function EasterEggMarker() {
           setPhase(3);
           setMessage("🎉 You did it! You got a mysterious prize from Dora.");
           handleCelebrate()
-          const playSound = () => {
-            const sound = new Audio('/easter-egg/dora_success_tone.mp3');
-            sound.play();
-          };
+
           playSound()
-        } else if (nextPhase === 4) {
-          setPhase(4)
-          setMessage("🎉 Thanks for the help!");
-          setIsOpen(true)
-          setShow(false)
-          setDone(true)
         }
       } else {
         setMessage(`Clicks: ${newCount}/${required} (within 1 second)`);
@@ -102,9 +102,12 @@ export default function EasterEggMarker() {
         className="rounded-xl shadow-lg max-h-[80vh] object-contain"
       />
     </PopupOverlay>
-    <Marker position={[19.433779218509624, -99.12035522247317]} icon={EggIcon}>
+    <Marker position={[19.433779218509624, -99.12035522247317]} icon={done?MusicBugIcon:DoraIcon}>
       <Popup>
-        
+        {done?
+        (<button onClick={playSound}>Click Me!</button>)
+        :
+        (
         <div className="popup-content">
 
           <img
@@ -170,7 +173,7 @@ export default function EasterEggMarker() {
 
           {phase === 3 && (
             <button
-            onClick={() => {setShow(false); setIsOpen(true); setMessage("🎉 Thanks for the help!")}}
+            onClick={() => {setDone(true); setShow(false); setIsOpen(true); setMessage("🎉 Thanks for the help!");}}
             className="px-4 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition"
             >
               Claim Reward
@@ -178,6 +181,8 @@ export default function EasterEggMarker() {
           )}
 
         </div>
+        )
+        }
       </Popup>
     </Marker>
   </>);

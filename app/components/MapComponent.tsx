@@ -37,7 +37,6 @@ function FlyToMarker({ selected }: { selected: Listing | null }) {
 
 export default function MapComponent({ listings, selected }: { listings: Listing[], selected: Listing | null }) {
   const markerRefs: any = useRef({});
-  const [done, setDone] = useState(false)
 
   // Whenever selected changes, open its popup if available
   useEffect(() => {
@@ -49,9 +48,6 @@ export default function MapComponent({ listings, selected }: { listings: Listing
     }
   }, [selected]);
 
-  useEffect(() => {
-    setDone(localStorage.getItem("easter") != "")
-  }, [])
 
   return (
     <MapContainer
@@ -65,9 +61,8 @@ export default function MapComponent({ listings, selected }: { listings: Listing
       />
 
       <MonashUniversitiesMarker />
-      {!done && (
-        <EasterEggMarker />
-      )}
+      <EasterEggMarker />
+
 
       {listings.map((house) => (
         <Marker
