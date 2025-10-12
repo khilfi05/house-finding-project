@@ -1,23 +1,16 @@
 "use client";
-import { useEffect, useState } from "react";
 
-export default function Home() {
-  const [users, setUsers] = useState([]);
+import dynamic from "next/dynamic";
+import "leaflet/dist/leaflet.css";
 
-  useEffect(() => {
-    fetch("/api/users")
-      .then((res) => res.json())
-      .then(setUsers);
-  }, []);
+export default function HomePage() {
+  const MapWithNoSSR = dynamic(() => import("@/components/Map"), {
+    ssr: false, // ✅ Prevents Next.js from rendering this component on the server
+  });
 
   return (
-    <main className="p-4">
-      <h1 className="text-xl font-bold mb-2">Users</h1>
-      <ul>
-        {users.map((user: any) => (
-          <li key={user._id}>{user.name}</li>
-        ))}
-      </ul>
+    <main style={{ height: "100vh", width: "100%" }}>
+      <MapWithNoSSR />
     </main>
   );
 }
