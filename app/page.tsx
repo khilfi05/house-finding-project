@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import Listing from "./models/Listing";
 
 const MapComponent = dynamic(() => import("./components/MapComponent"), {
   ssr: false,
@@ -42,7 +41,7 @@ export default function HomePage() {
         href="/add"
         className="absolute bottom-6 right-6 z-[1000] bg-blue-600 text-white px-5 py-3 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-200"
       >
-        + Contribute
+        + Add House
       </Link>
     </div>
   );
