@@ -18,7 +18,7 @@ const DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-function FlyToMarker({ selected }: { selected: Listing }) {
+function FlyToMarker({ selected }: { selected: Listing | null }) {
   const map = useMap();
 
   useEffect(() => {
@@ -30,8 +30,8 @@ function FlyToMarker({ selected }: { selected: Listing }) {
   return null;
 }
 
-export default function MapComponent({ listings, selected }: { listings: Listing[], selected: Listing }) {
-  const markerRefs = useRef({});
+export default function MapComponent({ listings, selected }: { listings: Listing[], selected: Listing | null }) {
+  const markerRefs: any = useRef({});
 
   // Whenever selected changes, open its popup if available
   useEffect(() => {

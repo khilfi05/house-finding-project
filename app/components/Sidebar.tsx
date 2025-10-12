@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import Listing from "../models/Listing";
 
 export default function Sidebar({ listings, onSelect }: { listings: Listing[], onSelect: any }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("");
   const [furnishedFilter, setFurnishedFilter] = useState("all");
@@ -29,7 +29,7 @@ export default function Sidebar({ listings, onSelect }: { listings: Listing[], o
     // Sort
     if (sort === "price") {
       result.sort((a, b) => {
-        const getPriceValue = (val) => {
+        const getPriceValue = (val: any) => {
           if (!val) return 0;
           if (typeof val === "number") return val;
           const match = val.toString().match(/\d+(\.\d+)?/);
@@ -52,7 +52,7 @@ export default function Sidebar({ listings, onSelect }: { listings: Listing[], o
         className="p-2 text-sm bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 transition"
         onClick={() => setOpen(!open)}
       >
-        {open ? "←" : "→"}
+        {open ? "≪" : "≫"}
       </button>
 
       {open && (
