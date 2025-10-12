@@ -38,6 +38,12 @@ export default function Sidebar({ listings, onSelect }: { listings: Listing[], o
         return getPriceValue(a.price) - getPriceValue(b.price);
       });
     }
+    // Monash distance
+    else if (sort === "monash") {
+      result.sort((a, b) => {
+        return a.walkingToMonash - b.walkingToMonash
+      });
+    }
 
     return result;
   }, [listings, query, sort, furnishedFilter]);
