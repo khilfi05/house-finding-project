@@ -3,7 +3,13 @@
 import { useState, useMemo } from "react";
 import Listing from "../models/Listing";
 
-export default function Sidebar({ listings, onSelect }: { listings: Listing[], onSelect: any }) {
+export default function Sidebar({
+  listings,
+  onSelect,
+}: {
+  listings: Listing[];
+  onSelect: any;
+}) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState("");
@@ -12,21 +18,18 @@ export default function Sidebar({ listings, onSelect }: { listings: Listing[], o
   const filteredListings = useMemo(() => {
     let result = [...listings];
 
-    // Search
     if (query) {
       result = result.filter((l) =>
         l.title?.toLowerCase().includes(query.toLowerCase())
       );
     }
 
-    // Filter
     if (furnishedFilter !== "all") {
       result = result.filter(
         (l) => !!l.furnished === (furnishedFilter === "furnished")
       );
     }
 
-    // Sort
     if (sort === "price") {
       result.sort((a, b) => {
         const getPriceValue = (val: any) => {
@@ -37,32 +40,36 @@ export default function Sidebar({ listings, onSelect }: { listings: Listing[], o
         };
         return getPriceValue(a.price) - getPriceValue(b.price);
       });
-    }
-    // Monash distance
-    else if (sort === "monash") {
-      result.sort((a, b) => {
-        return a.walkingToMonash - b.walkingToMonash
-      });
+    } else if (sort === "monash") {
+      result.sort((a, b) => a.walkingToMonash - b.walkingToMonash);
     }
 
     return result;
   }, [listings, query, sort, furnishedFilter]);
 
   return (
-    <div
-      className={`bg-white border-r border-gray-200 shadow-lg transition-all duration-300
-        ${open ? "w-80" : "w-12"} flex flex-col`}
-    >
-      {/* Toggle Button */}
+    <>
+      {/* Toggle Button (Always Visible) */}
       <button
-        className="p-2 text-sm bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 transition"
+        className="fixed top-4 left-4 z-[10001] p-2 text-sm bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full shadow-md w-12 h-12"
         onClick={() => setOpen(!open)}
       >
         {open ? "≪" : "≫"}
       </button>
 
-      {open && (
-        <div className="p-3 overflow-y-auto flex-1">
+      {/* Sidebar (Slides In/Out) */}
+      <div
+        className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 shadow-lg transition-transform duration-300 z-[10001]
+        ${open ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        {/* Toggle Button */}
+        <button
+          className="p-2 text-sm bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 transition w-full"
+          onClick={() => setOpen(!open)}
+        >
+          {open ? "≪" : "≫"}
+        </button>
+        <div className="p-3 overflow-y-auto flex-1 w-80">
           <input
             type="text"
             placeholder="Search house name..."
@@ -93,7 +100,6 @@ export default function Sidebar({ listings, onSelect }: { listings: Listing[], o
             </select>
           </div>
 
-          {/* Listing List */}
           <ul>
             {filteredListings.map((house, i) => (
               <li
@@ -111,7 +117,7 @@ export default function Sidebar({ listings, onSelect }: { listings: Listing[], o
             ))}
           </ul>
         </div>
-      )}
-    </div>
+      </div>
+    </>
   );
 }

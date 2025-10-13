@@ -22,7 +22,7 @@ export default function PopupOverlay({ isOpen, onClose, children }: { isOpen: bo
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.7 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black z-10000"
+            className="fixed inset-0 bg-black z-20000"
             onClick={onClose}
           />
 
@@ -33,7 +33,7 @@ export default function PopupOverlay({ isOpen, onClose, children }: { isOpen: bo
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-10001 flex items-center justify-center"
+            className="fixed inset-0 z-20001 flex items-center justify-center"
           >
             <div className="relative bg-white rounded-2xl shadow-xl max-w-3xl w-full max-h-[85vh] overflow-hidden flex items-center justify-center">
               {children}

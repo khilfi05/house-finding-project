@@ -52,8 +52,9 @@ export default function MapComponent({ listings, selected }: { listings: Listing
   return (
     <MapContainer
       center={[-37.91087518572503, 145.13660875582238]}
-      zoom={12}
+      zoom={14}
       style={{ height: "100%", width: "100%" }}
+      zoomControl={false}
     >
       <TileLayer
         attribution='© <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
@@ -136,7 +137,7 @@ export default function MapComponent({ listings, selected }: { listings: Listing
                 <div className="mb-4" />
                 <Link href={`/edit/${house._id}`} className="hover:bg-gray-100 hover:border-gray-400 text-xs border placeholder-gray-300 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 p-2 mb-2 w-full text-blue-400">
                   <button type="button">
-                    Edit House
+                    Add Information
                   </button>
                 </Link>
 
