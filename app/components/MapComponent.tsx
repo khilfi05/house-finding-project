@@ -134,8 +134,10 @@ export default function MapComponent({ listings, selected }: { listings: Listing
                 (<></>)}
                 </div>
                 <div className="mb-4" />
-                <Link href={`/edit/${house._id}`} className="text-blue-500 underline text-xs">
-                  Edit House
+                <Link href={`/edit/${house._id}`} className="hover:bg-gray-100 hover:border-gray-400 text-xs border placeholder-gray-300 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 p-2 mb-2 w-full text-blue-400">
+                  <button type="button">
+                    Edit House
+                  </button>
                 </Link>
 
             </div>
