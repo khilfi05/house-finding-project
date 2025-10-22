@@ -13,15 +13,21 @@ import EasterEggMarker from "./EasterEggMarker";
 // TODO Change definition "To Monash" is shortest travel time (walking + bus)
 // TODO Change definition "To Bus Stop" is shortest travel time to a bus stop (walking)
 
-const DefaultIcon = L.icon({
-  iconUrl: "/leaflet/marker-icon.png",
-  iconRetinaUrl: "/leaflet/marker-icon-2x.png",
+const BlueIcon = L.icon({
+  iconUrl: "/leaflet/blue-marker-icon.png",
+  iconRetinaUrl: "/leaflet/blue-marker-icon-2x.png",
   shadowUrl: "/leaflet/marker-shadow.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
 });
 
-L.Marker.prototype.options.icon = DefaultIcon;
+const YellowIcon = L.icon({
+  iconUrl: "/leaflet/yellow-marker-icon.png",
+  iconRetinaUrl: "/leaflet/yellow-marker-icon-2x.png",
+  shadowUrl: "/leaflet/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
 
 function FlyToMarker({ selected }: { selected: Listing | null }) {
   const map = useMap();
@@ -72,6 +78,7 @@ export default function MapComponent({ listings, selected }: { listings: Listing
           ref={(ref) => {
             if (ref) markerRefs.current[house._id || house.title] = ref;
           }}
+          icon={house?.color && house.color == "yellow" ? YellowIcon:  BlueIcon}
         >
             <Popup>
             <div className="popup-content">

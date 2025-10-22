@@ -12,6 +12,7 @@ interface Listing {
     lat: number
     lon: number
     additionalDetails: string
+    color: string
 };
 
 export default Listing

@@ -11,7 +11,7 @@ export default function AddListingPage() {
     title: "",
     price: "",
     description: "",
-    furnished: "",
+    furnished: "yes",
     walkingToMonash: "",
     walkingToBusStop: "",
     sourceURL: "",
@@ -20,6 +20,7 @@ export default function AddListingPage() {
     latitude: "",
     longitude: "",
     additionalDetails: "",
+    color: "blue"
   });
 
   const [submitButton, setSubmitButton] = useState(false);
@@ -100,6 +101,7 @@ export default function AddListingPage() {
       imageURL: form.imageURL,
       lat: Number(coords.lat),
       lon: Number(coords.lon),
+      color: form.color
     };
 
     try {
@@ -259,6 +261,31 @@ export default function AddListingPage() {
               placeholder="Eg: https://inspectre.blob.core.windows.net/images/normal/..."
               required
             />
+          </div>
+          
+          {/* Color */}
+          <div>
+            <label className="block font-medium">Color <label className="text-red-600">*</label></label>
+            <div className="flex gap-4 mt-1">
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, color: "blue" })}
+                className={`px-4 py-2 rounded-lg border hover:bg-gray-200 ${
+                  form.color === "blue" ? "bg-blue-600 text-white hover:bg-blue-700" : ""
+                }`}
+              >
+                Blue
+              </button>
+              <button
+                type="button"
+                onClick={() => setForm({ ...form, color: "yellow" })}
+                className={`px-4 py-2 rounded-lg border hover:bg-gray-200 ${
+                  form.color === "yellow" ? "bg-yellow-400 text-white hover:bg-yellow-500" : ""
+                }`}
+              >
+                Yellow
+              </button>
+            </div>
           </div>
 
           {/* Additional Details */}
